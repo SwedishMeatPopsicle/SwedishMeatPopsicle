@@ -12,7 +12,7 @@ namespace Lektion_14_10
         public string ISBN { get; set; }
         public bool Available { get; set; }
 
-        public Book(String author, string titel, string isbn, bool available)
+        public Book(string author, string titel, string isbn, bool available)
         {
             Author = author;
             Title = titel;

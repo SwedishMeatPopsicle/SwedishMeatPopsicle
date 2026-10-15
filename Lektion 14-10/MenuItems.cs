@@ -23,5 +23,12 @@ namespace Lektion_14_10
             Console.WriteLine("2. Hantera dina lån");
             Console.WriteLine("3. Logga ut.");
         }
+
+        public void LoanMenu()
+        {
+            Console.WriteLine("1. Registrera ett lån");
+            Console.WriteLine("2. Lämna tillbaka en bok");
+            Console.WriteLine("3. Återgå till föregående meny");
+        }
     }
 }

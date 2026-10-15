@@ -12,17 +12,18 @@
             bool regPass = true;
             MenuItems menu = new MenuItems();
             List<User> users = new List<User>();
-            List<Book> books = new List<Book>();
-            User Admin = new User("Admin", "123", true);
+            List<Book> books = new List<Book>();    // Samtliga registrerade böcker
+            List<Loan> loan = new List<Loan>(); // Samtliga utlånade böcker
+            User Admin = new User("Admin", "1234", true);
             users.Add(Admin);
             /* - Menysystem
-             * - Lista böcker
-             * - Lista användare
-             * - Sökfunktion böcker
-             * - Sökfunktion användare (admin)
+             * - Lista böcker                       --> Check!
+             * - Lista användare                    --> Check!
+             * - Sökfunktion böcker                 --> Check!
+             * - Sökfunktion användare (admin)      
              * - Klasser                            --> Check!
-             * - Spara användare
-             * - Spara böcker
+             * - Spara användare                    --> Check!
+             * - Spara böcker                       
              */
             while (run == true)
             { 
@@ -75,13 +76,43 @@
 
                                                     else
                                                     {
-                                                        //sökfunktion
+                                                        foreach (Book book in books)
+                                                        {
+                                                            if (book.Author.Contains(input) || book.Title.Contains(input) || book.ISBN.Contains(input))
+                                                            {
+                                                                Console.WriteLine(book);
+                                                            }
+                                                        }
+                                                                                                                  //sökfunktion
                                                         break;
                                                     }
                                                 }
                                             case "2":
                                                 {
-                                                    //lånefunktionen
+                                                    menu.LoanMenu();
+                                                    switch (Console.ReadLine())
+                                                        {
+                                                        case "1":
+                                                            Console.WriteLine("Ange ISBN nr. för boken du vill låna");
+                                                            string input = Console.ReadLine();
+                                                            foreach(Book book in books)
+                                                                if (book.ISBN == input)
+                                                                {
+                                                                    DateTime date = DateTime.Now;
+                                                                    string dateString = date.ToString();
+                                                                    book.Available = false;
+                                                                    Loan newLoan= new Loan (book, loggedInUser, dateString);
+                                                                }
+
+                                                            break;
+                                                        case "2":
+
+                                                            break;
+                                                        case "3":
+                                                            break;
+                                                        default:
+                                                            break;
+                                                        }
                                                     break;
                                                 }
                                             case "3":
