@@ -7,6 +7,9 @@
             //Variabler
             bool loggedIn = false;
             bool run = true;
+            bool regFunk = true;
+            bool idNotTaken = true;
+            bool regPass = true;
             MenuItems menu = new MenuItems();
             List<User> users = new List<User>();
             List<Book> books = new List<Book>();
@@ -52,7 +55,7 @@
                                     Console.WriteLine();
                                     User loggedInUser = userFound;
                                     loggedIn = true;
-                                    while (loggedIn = true)
+                                    while (loggedIn == true)
                                     {
                                         menu.LoggedInMenu();
                                         switch (Console.ReadLine())
@@ -111,8 +114,58 @@
 
                     case "2":
                     {
-                        //Reg Funktion
-                        break;
+                            //Reg Funktion
+                            while (regFunk == true)
+                            {
+                                Console.WriteLine("Välj ett användarnamn eller \"Q/q\" för att gå tillbaka");
+                                string newID = Console.ReadLine();
+                                if (newID == null || newID == "")
+                                {
+                                    break;
+                                }
+                                else if (newID == "Q")
+                                {
+                                    regFunk = false;
+                                    break;
+                                }
+                                else if (newID == "q")
+                                {
+                                    regFunk = false;
+                                    break;
+                                }
+                                else
+                                {
+                                    foreach (User user in users)
+                                    {
+                                        if (user.ID == newID)
+                                        {
+                                            Console.WriteLine("Beklagar, användarnamnet är upptaget");
+                                            idNotTaken = false;
+                                            break;
+                                        }
+                                    }
+                                    if (idNotTaken == true)
+                                    {
+                                        while (regPass == true)
+                                        { 
+                                            Console.WriteLine("Ange önskat lösenord");
+                                            string newPass = Console.ReadLine();
+                                            if (newPass == null || newPass == "")
+                                            {
+                                                Console.WriteLine("Lösenordet är för kort. Försök igen");
+                                            }
+                                            else
+                                            {
+                                                User newUser = new User(newID, newPass, false);
+                                                users.Add(newUser);
+                                                regFunk = false;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            break;
                     }
                 case "3":
                     {
