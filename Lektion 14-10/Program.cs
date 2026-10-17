@@ -10,10 +10,13 @@
             bool regFunk = true;
             bool idNotTaken = true;
             bool regPass = true;
+            bool loanMenu = true;
+            bool searchRun = true;
+            bool loanFound = false;
             MenuItems menu = new MenuItems();
             List<User> users = new List<User>();
             List<Book> books = new List<Book>();    // Samtliga registrerade böcker
-            List<Loan> loan = new List<Loan>(); // Samtliga utlånade böcker
+            List<Loan> loans = new List<Loan>(); // Samtliga utlånade böcker
             User Admin = new User("Admin", "1234", true);
             users.Add(Admin);
             /* - Menysystem
@@ -62,59 +65,144 @@
                                         switch (Console.ReadLine())
                                         {
                                             case "1":
+                                            {
+                                                Console.WriteLine("Sök efter titel, författare eller ISBN nummer");
+                                                Console.WriteLine("eller tryck Q för att gå tillbaka");
+                                                string input = Console.ReadLine().ToLower().Trim();
+                                                if (input == "Q" || input == "q")
                                                 {
-                                                    Console.WriteLine("Sök efter titel, författare eller ISBN nummer");
-                                                    Console.WriteLine("eller tryck Q för att gå tillbaka");
-                                                    string input = Console.ReadLine();
-                                                    if (input == "Q")
-                                                        break;
-
-                                                    else if (input == "q")
-                                                    {
-                                                        break;
-                                                    }
-
-                                                    else
-                                                    {
-                                                        foreach (Book book in books)
-                                                        {
-                                                            if (book.Author.Contains(input) || book.Title.Contains(input) || book.ISBN.Contains(input))
-                                                            {
-                                                                Console.WriteLine(book);
-                                                            }
-                                                        }
-                                                                                                                  //sökfunktion
-                                                        break;
-                                                    }
+                                                    break;
                                                 }
-                                            case "2":
+                                                else
                                                 {
-                                                    menu.LoanMenu();
-                                                    switch (Console.ReadLine())
+                                                    foreach (Book book in books)
+                                                    {
+                                                        if (book.Author.Contains(input) || book.Title.Contains(input) || book.ISBN.Contains(input))
                                                         {
-                                                        case "1":
-                                                            Console.WriteLine("Ange ISBN nr. för boken du vill låna");
+                                                            Console.WriteLine(book);
+                                                        }
+                                                    }
+                                                 //sökfunktion
+                                                break;
+                                               }
+                                            }
+                                            case "2":
+                                            {
+                                                menu.LoanMenu(); // Laddar lånemenyn
+                                                switch (Console.ReadLine())
+                                                {
+                                                    case "1":
+                                                    {
+                                                        while (searchRun == true)
+                                                        {
+                                                            Console.WriteLine("Ange ISBN nr. för boken du vill låna eller Q för att gå tillbaka till föregående meny");
                                                             string input = Console.ReadLine();
-                                                            foreach(Book book in books)
+                                                            bool bookFound = false;
+                                                            if (input == "Q" || input == "q")
+                                                            {
+                                                                searchRun = false;
+                                                                break;
+                                                            }
+                                                            foreach (Book book in books)
+                                                            {
                                                                 if (book.ISBN == input)
                                                                 {
                                                                     DateTime date = DateTime.Now;
                                                                     string dateString = date.ToString();
                                                                     book.Available = false;
-                                                                    Loan newLoan= new Loan (book, loggedInUser, dateString);
+                                                                    Loan newLoan = new Loan(book, loggedInUser, dateString);
+                                                                    loans.Add(newLoan);
+                                                                    bookFound = true;
+                                                                    searchRun = false;
+                                                                    break;
                                                                 }
-
-                                                            break;
-                                                        case "2":
-
-                                                            break;
-                                                        case "3":
-                                                            break;
-                                                        default:
-                                                            break;
+                                                            }
+                                                            if (bookFound == false)
+                                                            {
+                                                                Console.WriteLine("Ogiltigt ISBN nr, var god försök igen");
+                                                            }
+                                                            if (bookFound == true)
+                                                            {
+                                                                searchRun = false;
+                                                                break;
+                                                            }
                                                         }
-                                                    break;
+                                                        break;
+                                                    }
+                                                    case "2": // Lämna tillbaka böcker
+                                                    {
+                                                        bool noLoan = true;
+                                                        int nr = 1;
+                                                        while (loanMenu = true)
+                                                        {
+                                                            foreach (Loan loan in loans)
+                                                            {
+                                                                if (loan.Name == loggedInUser)  // Letar efter lånade böcker och visar dessa
+                                                                {
+                                                                    if (nr == 1)
+                                                                    {
+                                                                        Console.WriteLine("Du har lånat följande böcker:");
+                                                                    }
+                                                                    noLoan = false;
+                                                                    Console.WriteLine($"{nr}. {loan}");
+                                                                    nr++;
+                                                                }
+                                                            }
+                                                            if (noLoan == true) // Om inga lånade böcker hittas
+                                                            {
+                                                                Console.WriteLine("Du har inga aktiva lån");
+                                                                loanMenu = false;
+                                                                Console.ReadLine();
+                                                                break;
+                                                            }
+                                                            else // Fråga efter vilken bok som ska lämnas tillbaka
+                                                            {
+                                                                Console.WriteLine("Ange ISBN för den bok du vill återlämna eller Q för att återgå till föregående meny");
+                                                                string input = Console.ReadLine();
+                                                                if (input == "Q" || input == "q")
+                                                                {
+                                                                    loanMenu = false;
+                                                                    break;
+                                                                }
+                                                                else if (input == "" || input == null)
+                                                                {
+                                                                    break;
+                                                                }
+                                                                else
+                                                                {
+                                                                    foreach (Loan loan in loans)
+                                                                    {
+                                                                        if (loan.Title.ISBN == input)
+                                                                        {
+                                                                            loanFound = true;
+                                                                            Console.WriteLine($"Tack för att du återlämnade {loan.Title.Title}!");
+                                                                            loans.Remove(loan);
+                                                                            break;
+                                                                        }
+                                                                    }
+                                                                }
+                                                                if (loanFound == false)
+                                                                {
+                                                                    Console.WriteLine("Felaktigt ISBN nr. var god försök igen");
+                                                                }
+                                                            }
+                                                        }
+                                                        break;
+                                                    }
+                                                    case "3": //logga ut
+                                                    { 
+                                                        loanMenu = false;
+                                                        break;
+                                                    }
+                                                    default:
+                                                    {
+                                                        loanMenu = false;
+                                                        break;
+                                                    }
+                                                 
                                                 }
+                                            break;
+                                            }
                                             case "3":
                                                 {
                                                     loggedInUser = null;
@@ -141,7 +229,7 @@
                             }
                         }
                         break;
-
+                        
 
                     case "2":
                     {
@@ -154,12 +242,7 @@
                                 {
                                     break;
                                 }
-                                else if (newID == "Q")
-                                {
-                                    regFunk = false;
-                                    break;
-                                }
-                                else if (newID == "q")
+                                else if (newID == "Q" || newID == "q")
                                 {
                                     regFunk = false;
                                     break;
