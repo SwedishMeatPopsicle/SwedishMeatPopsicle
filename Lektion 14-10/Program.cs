@@ -13,10 +13,12 @@
             bool loanMenu = true;
             bool searchRun = true;
             bool loanFound = false;
+            Book test = new Book("123", "123", "123", true);
             MenuItems menu = new MenuItems();
             List<User> users = new List<User>();
             List<Book> books = new List<Book>();    // Samtliga registrerade böcker
             List<Loan> loans = new List<Loan>(); // Samtliga utlånade böcker
+            books.Add(test);
             User Admin = new User("Admin", "1234", true);
             users.Add(Admin);
             /* - Menysystem
@@ -82,6 +84,7 @@
                                                             Console.WriteLine(book);
                                                         }
                                                     }
+                                                Console.WriteLine();
                                                  //sökfunktion
                                                 break;
                                                }
@@ -123,6 +126,7 @@
                                                             }
                                                             if (bookFound == true)
                                                             {
+                                                                Console.WriteLine("Lånet är nu registrerat!");
                                                                 searchRun = false;
                                                                 break;
                                                             }
@@ -205,6 +209,19 @@
                                             }
                                             case "3":
                                                 {
+                                                    if (loggedInUser.IsAdmin == true)
+                                                    {
+                                                        menu.AdminMenu();
+                                                        break;
+                                                    }
+                                                    else
+                                                    {
+                                                        Console.WriteLine("Du saknar administrationsrättigheter");
+                                                        break;
+                                                    }
+                                                }
+                                            case "4":
+                                                {
                                                     loggedInUser = null;
                                                     loggedIn = false;
                                                     break;
@@ -216,7 +233,6 @@
                                                 }
                                         }
                                     }
-                                    //Inloggad funkiton
                                 }
                                 else
                                 {

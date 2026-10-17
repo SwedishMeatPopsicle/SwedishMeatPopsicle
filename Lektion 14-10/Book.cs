@@ -22,7 +22,7 @@ namespace Lektion_14_10
 
         public override string ToString()
         {
-            return $"{Author} {Title} {ISBN} {Available}";
+            return $"Författare: {Author} Titel: {Title} ISBN: {ISBN} finns inne: {Available}";
         }
     }
 }
